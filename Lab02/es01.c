@@ -8,9 +8,6 @@
 void lsRecursive(FILE *fp,char *path,int space);
 
 int main(int argc,char **argv){
-	char path[500];
-	DIR *dir;
-	struct dirent *dp;
 
 	if(argc!=2){
 		printf("errore parametri!\n");
@@ -33,7 +30,7 @@ void lsRecursive(FILE *fp,char *path,int space){
 	dir=opendir(path);
 
 	if(dir==NULL){
-		fprintf(fp,"opendir() error at %s!\n",path);
+		fprintf(stderr,"opendir() error at %s!\n",path);
 		return;
 	}
 
