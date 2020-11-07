@@ -5,9 +5,10 @@
 
 #define BUFFER_SIZE 32
 #define MAX_ARGUMENT 5
+#define END "end\0"
 
 int main(int argc,char **argv){
-    char end[]="end\0";
+    
     FILE *fp;
     char buf[BUFFER_SIZE];
     int i=0,flag_path=0;
@@ -29,7 +30,7 @@ int main(int argc,char **argv){
 
 
     while(fscanf(fp,"%s",buf)!=EOF){
-        if(strcmp(buf,end)!=0){
+        if(strcmp(buf,END)!=0){
             if(!flag_path){
                 strcpy(path,buf);
                 flag_path=1;
@@ -40,7 +41,7 @@ int main(int argc,char **argv){
             }
         }else{
             cmd[i]=NULL;
-            //exec
+            
             if(!fork()){
 		        sleep(3);
                 fprintf(stdout,"Running Exec.\n");
@@ -65,4 +66,6 @@ int main(int argc,char **argv){
             flag_path=0;
         }
     }
+    fclose(fp);
+    return 0;
 }
