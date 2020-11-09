@@ -35,7 +35,7 @@ int main(int argc,char **argv){
                 strcpy(path,buf);
                 flag_path=1;
             }else {
-                cmd[i] = (char *) malloc(sizeof(char) * BUFFER_SIZE);
+                cmd[i] = (char *) malloc(sizeof(char) * (strlen(buf)+1));
                 strcpy(cmd[i], buf);
                 i++;
             }
