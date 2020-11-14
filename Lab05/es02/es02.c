@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
-#define N 12
+
 
 int childIteractions(int fp,int i,int n);
 void print_line(int fp,int n);
@@ -35,7 +35,7 @@ int main(int argc,char **argv){
 		exit(-1);
 	}
     }else{
-        execlp("./write.o","./write.o",argv[1],argv[2],(char *)0);
+        execlp("./write.o","./write.o",FileName,argv[2],(char *)0);
         exit(-1);
     }
 
