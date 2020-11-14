@@ -31,7 +31,7 @@ int main(int argc,char **argv){
     if(fork()){
        	wait(NULL);
     }else{
-        execlp("./write","./write",argv[1],argv[2],(char *)0);
+        execlp("./write.o","./write.o",argv[1],argv[2],(char *)0);
          
     }
 
