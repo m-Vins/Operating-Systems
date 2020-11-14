@@ -6,7 +6,7 @@
 
 #define N 12
 
-void childIteractions(int fp,int i,int n);
+int childIteractions(int fp,int i,int n);
 void print_line(int fp,int n);
 
 
@@ -14,7 +14,7 @@ int main(int argc,char **argv){
     char *FileName;
     int n;
     int fp;
-    int exitStatusChild;
+    int statVal;
 
 
 
@@ -55,12 +55,15 @@ int main(int argc,char **argv){
     for(int i=0;i<n-1;i++){
         if(fork()){
             //parent
-            wait(NULL);
+            wait(&statVal);
+	    if(WEXITSTATUS(statVal))
+		    break;
             print_line(fp,n);
         }
         else{
             //child
-            childIteractions(fp,i,n);
+            if(childIteractions(fp,i,n))
+		    exit(-1);
             exit(0);
         }
     }
@@ -71,8 +74,9 @@ int main(int argc,char **argv){
     close(fp);
 }
 
-void childIteractions(int fp,int i,int n){
+int childIteractions(int fp,int i,int n){
     int n1,n2,c1,c2;
+    int flag=1;
 
     lseek(fp,0,SEEK_SET);
 
@@ -94,6 +98,7 @@ void childIteractions(int fp,int i,int n){
 
         //swap
         if(n1>n2){
+            flag=0;
             lseek(fp,-sizeof(int),SEEK_CUR);
             write(fp,&n2,sizeof(int));
             write(fp,&n1,sizeof(int));
@@ -103,7 +108,7 @@ void childIteractions(int fp,int i,int n){
 
     }
 
-
+    return flag;
 }
 
 void print_line(int fp,int n){
