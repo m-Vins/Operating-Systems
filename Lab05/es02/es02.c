@@ -29,10 +29,14 @@ int main(int argc,char **argv){
     fprintf(stdout,"Calling write_file..\n");
 
     if(fork()){
-       	wait(NULL);
+       	wait(&statVal);
+	if(WEXITSTATUS(statVal)){
+		fprintf(stderr,"Error in the exec!\n");
+		exit(-1);
+	}
     }else{
         execlp("./write.o","./write.o",argv[1],argv[2],(char *)0);
-         
+        exit(-1);
     }
 
 
