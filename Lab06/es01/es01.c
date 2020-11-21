@@ -20,6 +20,7 @@ int main(void){
   pid_t pproducer,pconsumer;
   int file[2];
 
+
   if(signal(SIGUSR1,signalHandler)==SIG_ERR){
     fprintf(stderr,"signal Handler function error!\n");
     return 1;
@@ -81,11 +82,12 @@ void consumer(pid_t producerPid, int *file){
   while(1){
 
     fprintf(stdout,"please enter the line: ");
-    scanf("%s",line);
+    fgets(line,BUFFSIZE,stdin);
+    line[strlen(line)-1]='\0';
     fprintf(stdout,"your line is: %s\n",line);
     sizeofline=sizeof(line);
     fprintf(stdout,"the dimension of line is: %d\n",sizeofline);
-    write(file[1], &sizeofline, sizeof(size_t));
+    write(file[1], &sizeofline, sizeof(int));
     write(file[1],line,sizeof(line));
     fprintf(stdout,"%s writed in the pipe\n",line);
 
@@ -106,17 +108,17 @@ void consumer(pid_t producerPid, int *file){
 void producer(int *file){
   char line[BUFFSIZE];
   int sizeofline;
-  pid_t consumer;
+  pid_t consumerPid;
   fprintf(stdout,"producer process: %d \n",getpid());
 
   fprintf(stdout,"producer waiting for signal..\n");
   pause();
   fprintf(stdout,"signal received by producer\n");
-  fprintf(stdout,"reading consumer pid..\n \n");
-  read(file[0],&consumer,sizeof(pid_t));
-  fprintf(stdout,"consumer pid is: %d\n",consumer);
-  fprintf(stdout,"sending signal to consumer \n");
-  kill(consumer,SIGUSR1);
+  fprintf(stdout,"reading consumerPid pid..\n \n");
+  read(file[0], &consumerPid, sizeof(pid_t));
+  fprintf(stdout, "consumerPid pid is: %d\n", consumerPid);
+  fprintf(stdout,"sending signal to consumerPid \n");
+  kill(consumerPid, SIGUSR1);
 
 
     while(1){
@@ -127,7 +129,7 @@ void producer(int *file){
 
 
     fprintf(stdout,"reading the dimension of the line..\n");
-    read(file[0],&sizeofline,sizeof(size_t));
+    read(file[0],&sizeofline,sizeof(int));
     fprintf(stdout,"the dimension of line is: %d\n",sizeofline);
 
     fprintf(stdout,"Reading the line\n");
@@ -137,10 +139,13 @@ void producer(int *file){
     if(strcmp(line,"end")==0)
       break;
     mytoUpper(line);
+
     fprintf(stdout,"Line converted is: \n");
     fprintf(stdout,"%s\n",line);
-    fprintf(stdout,"sending signal to consumer \n");
-    kill(consumer,SIGUSR1);
+
+    fprintf(stdout,"sending signal to consumerPid \n");
+    kill(consumerPid, SIGUSR1);
+
   }
 
   fprintf(stderr,"producer has finished\n");
