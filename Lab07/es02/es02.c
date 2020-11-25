@@ -30,13 +30,11 @@ int main(int argc, char **argv){
 
     for(int i=0;i<2*n;i++){
         if(i<n) {
-            Names[i].ReadingFiles=(char *)malloc(sizeof(char)*strlen(argv[i+2])+1);
-            strcpy(Names[i].ReadingFiles,argv[i+2]);
+            Names[i].ReadingFiles=argv[i+2];
             fprintf(stdout,"ReadingFile[%d] = %s \n",i,Names[i].ReadingFiles);
         }
         else {
-            Names[i-n].WritingFiles=(char *)malloc(sizeof(char)*strlen(argv[i+2])+1);
-            strcpy(Names[i-n].WritingFiles,argv[i+2]);
+            Names[i-n].WritingFiles=argv[i+2];
             fprintf(stdout,"WritingFile[%d] = %s \n",i-n,Names[i-n].WritingFiles);
         }
     }
@@ -45,10 +43,13 @@ int main(int argc, char **argv){
         pthread_create(&threads[i], NULL, threadFunction, (void *)&Names[i]);
     }
 
+    //wait for the threads
 
+    for(int i=0;i<n;i++)
+        pthread_join(threads[i],NULL);
 
-
-    pthread_exit(NULL);
+    free(Names);
+    return 0;
 
 }
 
@@ -85,7 +86,7 @@ int writeOnFIle(char *fileName, int *vect, int n){
         exit(-1);
     }
 
-    fprintf(stdout,"%d\n",n);
+    fprintf(fp,"%d\n",n);
     for(int i=0;i<n;i++) {
         fprintf(fp, "%d\n", vect[i]);
         count++;
