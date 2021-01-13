@@ -1,0 +1,8 @@
+# progr1
+f1
+f2
+END
+# progr2
+fds
+fr
+END
