@@ -1,44 +1,28 @@
 #!/bin/bash
 
 if [ $# -ne 2 ]
-then
+then 
 	echo "parameters error"
-	exit 1
 fi
 
-iszombie=0
-while :
+count=0
+while true
 do
-	sleep $2
 
-	echo "output is : " $(ps -el | grep $1)
-	
-	if [ $? -eq 0 ]
-	then			
-		
-		processpid=$(ps -el | grep $1 | cut -d ' ' -f 4)
-		echo "process pid is: " $processpid
-		status=$(ps -el | grep $1 | cut -d ' ' -f 2)
-		echo "process status is: " $status
-
-		if [ $status == "Z" ]
+	if [ $(ps -el | grep -e ".*\<$1$" | tr -s ' ' \
+		| cut -d ' ' -f 2 ) = "Z" ]
+	then
+		echo " equal Z"
+		count=$(($count+1))
+		if [ $count -eq 5 ]
 		then 
-			let iszombie=$iszombie+1
-		fi
-
-		if [ $iszombie -ge 5 ]
-		then
-			kill -9 $pid
-			echo "process $1 killed"
 			exit 0
-		else
-			iszombie=0
 		fi
+	else
+		echo "not equal z"
+		count=0
 	fi
 
-done
+done 
 
 exit 0
-
-	
-

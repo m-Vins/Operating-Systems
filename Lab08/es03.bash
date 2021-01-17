@@ -1,17 +1,11 @@
 #!/bin/bash
 
-if [ $# ==  "1" ] 
+if [ $# -ne 1 ]
 then
-	dir=$1
-else
-	read dir
+	echo "parameters error"
 fi
 
-list=$(ls  $dir)
-cd $dir
-for tmp in $list
-do 
-	up=$(echo $tmp | tr [:upper:] [:lower:])
-	mv $tmp $up
-done 
-exit 0
+for x in $(ls $1)
+do
+	mv $1/$x $1/$(echo $x | tr [:upper:] [:lower:])
+done	

@@ -1,37 +1,32 @@
 #!/bin/bash
 
-if [ $# ==  "1" ] 
-then
-	file=$1
-else
-	read file
+if [ $# -ne 1 ]
+then 
+	echo "parameters error"
 fi
-echo "file name is: " $file
-l=0
-for word in $(cat $file)
+count=0
+for line in $(more $1)
 do
-	echo "current word is: " $word
 	flag=0
-	for(( i=0;i<${#words_array[*]};i++))
+	for((i=0;i<$count;i++))
 	do
-		if [ "${words_array[$i]}" = "$word" ]
-		then 
-			nwords[$i]=$((nwords[$i]+1))
-			echo "the word is already present in the vector"
+		if [ $line = ${vect[$i]} ]
+		then
+			occorrences[$i]=$((${occorrences[$i]}+1))
 			flag=1
 		fi
 	done
-
-	if [ $flag -eq 0 ]
+	if [ $flag -ne 1 ]
 	then
-		words_array[$l]=$word
-		nwords[$l]=1
-		let l=$(($l+1))
+		vect[$count]=$line
+		occorrences[$count]=1
+		let count=$count+1
 	fi
+
 done
 
-for((i=0;i<${#words_array[*]};i++))
+for(( i=0;i<$count;i++))
 do 
-	echo ${words_array[$i]} ":" ${nwords[$i]}
+	echo ${vect[$i]} ":" ${occorrences[$i]}
 done
 exit 0
