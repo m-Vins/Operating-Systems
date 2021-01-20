@@ -1,0 +1,53 @@
+#TO DO
+
+
+#include <pthread.h>
+
+pthread_t tid[r*c];
+int tmp[r][c];
+typedef struct {
+	int **mat;
+	int r,c;
+	int x;
+}arg_t;
+
+
+void smoothing(int **mat,int r, int c){
+	arg_t **arg_vector=(arg_t **)malloc(r*c*sizeof(arg_t)_;
+	tid=malloc(r*c*sizeof(pthread_t));
+	for(int i=0; int i<r*c; i++) {
+			arg_v[i]=(argv *)malloc(sizeof(argv_t);
+			arg_v[i]->mat=mat;
+			arg_v[i]->c=c;
+			arg_v[i]->r=r;
+			arg_v[i]->x=i;
+			pthread_create(pid[i],NULL,function_wrapper,arg_v[i]);
+			}
+	for(int i=0;i<r*c;i++)
+		pthread_join(tid[i]);
+
+}
+
+void smoothing_pixel(int **mat, int r, int c, int x){
+	int y=x/r;
+	int x=x%r;
+	int m=mat[x][y];
+	m+=mat[x-1][y-1];
+	m+=mat[x-1][y];
+	m+=mat[x-1][y+1];
+	m+=mat[x][y-1];
+	m+=mat[x][y+1];
+	m+=mat[x+1][y-1];
+	m+=mat[x+1][y];
+	m+=mat[x+1][y+1];
+	m/=9;
+	tmp[x][y]=m;
+	return ;
+}
+
+void *function_wrapper(arg_t *arg)
+{
+	arg_t a=(arg_t)arg;
+	smoothing_pixel(a->mat,a->r,a->c,a->x);
+	pthread_exit(0);
+}
